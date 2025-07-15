@@ -1,0 +1,66 @@
+﻿@page "/Registration"
+@using System.IO
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<h2>Registration</h2>
+
+<EditForm Model="@this" OnValidSubmit="@Register" Context="formContext">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <InputText @bind-Value="username" id="username" class="form-control" />
+        <ValidationMessage For="@(() => username)" />
+
+        <label for="email">E-Mail:</label>
+        <InputText @bind-Value="email" id="email" class="form-control" />
+        <ValidationMessage For="@(() => email)" />
+
+        <label for="password">Password:</label>
+        <InputText type="password" @bind-Value="password" id="password" class="form-control" />
+        <ValidationMessage For="@(() => password)" />
+
+        <button type="submit" class="btn btn-primary">Register</button>
+
+        @if (!string.IsNullOrEmpty(statusMessage))
+        {
+            <div class="alert @statusClass mt-3">@statusMessage</div>
+        }
+    </div>
+</EditForm>
+
+@code {
+    private string username = string.Empty;
+    private string email = string.Empty;
+    private string password = string.Empty;
+    private string statusMessage = string.Empty;
+    private string statusClass = "alert-success";
+
+    private async Task Register()
+    {
+        try
+        {
+            var connectionString = Configuration.GetConnectionString("OdbcConnection");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                statusMessage = "Database configuration error";
+                statusClass = "alert-danger";
+                return;
+            }
+
+            var newUser = new NewUser(username, password, email, connectionString);
+            newUser.RegisterUser();
+
+            statusMessage = "Registration successful!";
+            statusClass = "alert-success";
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Registration failed: {ex.Message}";
+            statusClass = "alert-danger";
+        }
+    }
+}

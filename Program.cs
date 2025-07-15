@@ -13,6 +13,7 @@ namespace LieAsocial
                 .AddInteractiveServerComponents();
 
             var app = builder.Build();
+            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -21,7 +22,6 @@ namespace LieAsocial
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();

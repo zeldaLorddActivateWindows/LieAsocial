@@ -1,0 +1,70 @@
+﻿@page "/Login"
+@using System.IO
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject NavigationManager Navigation
+
+<h2>Login</h2>
+
+<EditForm Model="@this" OnValidSubmit="@HandleLogin" Context="formContext">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <InputText @bind-Value="username" id="username" class="form-control" />
+        <ValidationMessage For="@(() => username)" />
+
+        <label for="password">Password:</label>
+        <InputText type="password" @bind-Value="password" id="password" class="form-control" />
+        <ValidationMessage For="@(() => password)" />
+
+        <button type="submit" class="btn btn-primary">Login</button>
+
+        @if (!string.IsNullOrEmpty(statusMessage))
+        {
+            <div class="alert @statusClass mt-3">@statusMessage</div>
+        }
+    </div>
+</EditForm>
+
+@code {
+    private string username = string.Empty;
+    private string password = string.Empty;
+    private string statusMessage = string.Empty;
+    private string statusClass = "alert-success";
+
+    private async Task HandleLogin() {
+        try
+        {
+            var connectionString = Configuration.GetConnectionString("OdbcConnection");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                statusMessage = "Database configuration error";
+                statusClass = "alert-danger";
+                return;
+            }
+            var loginUser = new LoginUser(username, password, connectionString);
+            bool isAuthenticated = loginUser.ValidateLogin();
+
+            if (isAuthenticated)
+            {
+                statusMessage = "Login successful! Redirecting...";
+                statusClass = "alert-success";
+                await Task.Delay(1500);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                statusMessage = "Invalid username or password";
+                statusClass = "alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Login failed: {ex.Message}";
+            statusClass = "alert-danger";
+        }
+    }
+}
