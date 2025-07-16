@@ -1,27 +1,31 @@
-﻿using System.Text.RegularExpressions;
+﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Data.Odbc;
+using System.Net.Mail;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace LieAsocial
 {
     public class NewUser
     {
         private string? password;
+        private string? email;
         public string? Name { get; set; }
         public string? Password
         {
             get => password;
-            set => password = HasFourIntegers(value!) && value?.Length >= 8  ? value : throw new Exception("Password must be at least 8 long and contain 4 or more numbers.");
+            set => password = HasFourIntegers(value!) && value?.Length >= 8 ? value : throw new Exception("Password must be at least 8 characters long and contain 4 or more numbers.");
         }
-        public string? Email { get; set; }
+        public string? Email { get => email; set => email = IsValid(value!) ? value : throw new Exception("Invalid email"); }
         private readonly string _connectionString;
-        static int uid = 0;
+        public byte[] Salt {  get; } = RandomNumberGenerator.GetBytes(128 / 8); 
+
         public NewUser(string name, string password, string email, string connectionString)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-            Name = name;
-            Password = password;
-            Email = email;
-            uid++;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Email = email ?? throw new ArgumentNullException(nameof(email));
+            Password = password ?? throw new ArgumentNullException(nameof(password));
         }
 
         private static bool HasFourIntegers(string input)
@@ -30,27 +34,50 @@ namespace LieAsocial
             return matches.Count >= 4;
         }
 
+        public string HashPassword(string plainPassword)
+        {
+            return Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: plainPassword,
+                salt: Salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+        }
+        private static bool IsValid(string email)
+        {
+            var valid = true;
+
+            try
+            {
+                var emailAddress = new MailAddress(email);
+            }
+            catch
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
         public bool RegisterUser()
         {
             try
             {
                 var connection = new OdbcConnection(_connectionString);
                 connection.Open();
-
                 var checkCommand = new OdbcCommand("SELECT COUNT(*) FROM users WHERE Email = ?", connection);
                 checkCommand.Parameters.AddWithValue("@email", Email);
-
                 int count = Convert.ToInt32(checkCommand.ExecuteScalar());
                 if (count > 0) throw new Exception("User with this email already exists");
+                string hashedPassword = HashPassword(Password);
+                var insertCommand = new OdbcCommand("INSERT INTO users (Username, PasswordHash, PasswordSalt, Email) VALUES (?, ?, ?, ?)", connection);
 
-                using var insertCommand = new OdbcCommand("INSERT INTO users (username, PasswordHash, Email) VALUES (?, ?, ?)", connection);
                 insertCommand.Parameters.AddWithValue("@username", Name);
-                insertCommand.Parameters.AddWithValue("@PasswordHash", Password);
+                insertCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+                insertCommand.Parameters.AddWithValue("@PasswordSalt", Convert.ToBase64String(Salt));
                 insertCommand.Parameters.AddWithValue("@Email", Email);
 
                 int rowsAffected = insertCommand.ExecuteNonQuery();
-                if (rowsAffected == 0) throw new Exception("Failed to register user");
-                else return true;
+                return rowsAffected > 0;
             }
             catch (OdbcException ex)
             {
