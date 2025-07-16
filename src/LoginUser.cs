@@ -19,9 +19,9 @@ namespace LieAsocial
         {
             try
             {
-                var connection = new OdbcConnection(_connectionString);
+                using var connection = new OdbcConnection(_connectionString);
                 connection.Open();
-                var command = new OdbcCommand("SELECT COUNT(*) FROM Users WHERE Username = ? AND Password = ?", connection);    
+                using var command = new OdbcCommand("SELECT COUNT(*) FROM Users WHERE Username = ? AND Password = ?", connection);
                 command.Parameters.AddWithValue("@username", Username);
                 command.Parameters.AddWithValue("@password", Password);
                 int count = Convert.ToInt32(command.ExecuteScalar());
