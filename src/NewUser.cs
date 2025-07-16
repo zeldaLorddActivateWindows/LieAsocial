@@ -14,13 +14,14 @@ namespace LieAsocial
         }
         public string? Email { get; set; }
         private readonly string _connectionString;
-
+        static int uid = 0;
         public NewUser(string name, string password, string email, string connectionString)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
             Name = name;
             Password = password;
             Email = email;
+            uid++;
         }
 
         private static bool HasFourIntegers(string input)
@@ -36,16 +37,16 @@ namespace LieAsocial
                 using var connection = new OdbcConnection(_connectionString);
                 connection.Open();
 
-                using var checkCommand = new OdbcCommand("SELECT COUNT(*) FROM Users WHERE Email = ?", connection);
+                using var checkCommand = new OdbcCommand("SELECT COUNT(*) FROM users WHERE Email = ?", connection);
                 checkCommand.Parameters.AddWithValue("@email", Email);
 
                 int count = Convert.ToInt32(checkCommand.ExecuteScalar());
                 if (count > 0) throw new Exception("User with this email already exists");
 
-                using var insertCommand = new OdbcCommand("INSERT INTO Users (Name, Password, Email) VALUES (?, ?, ?)", connection);
-                insertCommand.Parameters.AddWithValue("@name", Name);
-                insertCommand.Parameters.AddWithValue("@password", Password);
-                insertCommand.Parameters.AddWithValue("@email", Email);
+                using var insertCommand = new OdbcCommand("INSERT INTO users (username, PasswordHash, Email) VALUES (?, ?, ?)", connection);
+                insertCommand.Parameters.AddWithValue("@username", Name);
+                insertCommand.Parameters.AddWithValue("@PasswordHash", Password);
+                insertCommand.Parameters.AddWithValue("@Email", Email);
 
                 int rowsAffected = insertCommand.ExecuteNonQuery();
                 if (rowsAffected == 0) throw new Exception("Failed to register user");
