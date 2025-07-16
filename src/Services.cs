@@ -6,7 +6,7 @@ namespace LieAsocial
 {
     public class UserService
     {
-        private readonly string _connectionString;
+        public string _connectionString;
 
         public UserService(string connectionString)
         {

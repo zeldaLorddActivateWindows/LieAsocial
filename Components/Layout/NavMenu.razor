@@ -66,18 +66,8 @@
         AuthService.UserChanged += OnUserChanged;
     }
 
-    private async void OnUserChanged(User? user)
-    {
-        await InvokeAsync(StateHasChanged);
-    }
-
-    private async Task Logout()
-    {
-        await AuthService.LogoutAsync();
-    }
-
-    public void Dispose()
-    {
-        AuthService.UserChanged -= OnUserChanged;
-    }
+    private async void OnUserChanged(User? user) => await InvokeAsync(StateHasChanged);
+    private async Task Logout() => await AuthService.LogoutAsync();
+    public void Dispose() => AuthService.UserChanged -= OnUserChanged;
+    
 }
