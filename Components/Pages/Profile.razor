@@ -1,0 +1,280 @@
+﻿@page "/profile"
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Profile - LieAsocial</PageTitle>
+
+@if (AuthService.IsAuthenticated)
+{
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Edit Profile</h3>
+
+                        <EditForm Model="@this" OnValidSubmit="@UpdateProfile">
+                            <div class="mb-3">
+                                <label for="displayName" class="form-label">Display Name:</label>
+                                <InputText @bind-Value="displayName" id="displayName" class="form-control" placeholder="Your display name" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">Bio:</label>
+                                <InputTextArea @bind-Value="bio" id="bio" class="form-control" rows="3"
+                                               placeholder="Tell us about yourself..." maxlength="160" />
+                                <div class="form-text">@(160 - bio.Length) characters remaining</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Username:</label>
+                                <input type="text" class="form-control" value="@AuthService.CurrentUser?.Username" disabled />
+                                <div class="form-text">Username cannot be changed</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Email:</label>
+                                <input type="text" class="form-control" value="@AuthService.CurrentUser?.Email" disabled />
+                                <div class="form-text">Email cannot be changed</div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary" disabled="@isUpdating">
+                                    @if (isUpdating)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span>Updating...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Update Profile</span>
+                                    }
+                                </button>
+                                <a href="/" class="btn btn-secondary">Cancel</a>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(statusMessage))
+                            {
+                                <div class="alert @statusClass mt-3">@statusMessage</div>
+                            }
+                        </EditForm>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h4>Your Posts</h4>
+                    @if (userPosts.Any())
+                    {
+                        @foreach (var post in userPosts)
+                        {
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <small class="text-muted">@post.DateCreated.ToString("MMM d, yyyy 'at' h:mm tt")</small>
+                                        <button class="btn btn-sm btn-outline-danger" @onclick="@(() => DeletePost(post.PostId))">
+                                            Delete
+                                        </button>
+                                    </div>
+                                    <p class="mb-2">@post.Content</p>
+                                    <div class="d-flex align-items-center text-muted">
+                                        <small class="me-3">
+                                            <i class="far fa-heart me-1"></i>
+                                            @post.LikeCount likes
+                                        </small>
+                                        <small>
+                                            <i class="far fa-comment me-1"></i>
+                                            @post.CommentCount comments
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <p class="text-muted">You haven't posted anything yet.</p>
+                            <a href="/" class="btn btn-primary">Create your first post</a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="card">
+                    <div class="card-body text-center">
+                        @if (!string.IsNullOrEmpty(AuthService.CurrentUser?.ProfilePictureUrl))
+                        {
+                            <img src="@AuthService.CurrentUser.ProfilePictureUrl" alt="@AuthService.CurrentUser.DisplayName"
+                                 class="rounded-circle mb-3" width="80" height="80">
+                        }
+                        else
+                        {
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3"
+                                 style="width: 80px; height: 80px;">
+                                <span class="text-white fw-bold fs-2">@AuthService.CurrentUser?.DisplayName?.First()</span>
+                            </div>
+                        }
+                        <h5>@AuthService.CurrentUser?.DisplayName</h5>
+                        <p class="text-muted">@@@AuthService.CurrentUser?.Username</p>
+                        @if (!string.IsNullOrEmpty(AuthService.CurrentUser?.Bio))
+                        {
+                            <p class="text-muted">@AuthService.CurrentUser.Bio</p>
+                        }
+                        <small class="text-muted">Member since @AuthService.CurrentUser?.DateCreated.ToString("MMMM yyyy")</small>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">Account</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-danger" @onclick="Logout">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <h3>Access Denied</h3>
+                <p>You need to be logged in to view this page.</p>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string displayName = string.Empty;
+    private string bio = string.Empty;
+    private string statusMessage = string.Empty;
+    private string statusClass = "alert-success";
+    private bool isUpdating = false;
+    private List<Post> userPosts = new();
+    private PostService? postService;
+    private UserService? userService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+
+        if (AuthService.IsAuthenticated)
+        {
+            var connectionString = Configuration.GetConnectionString("OdbcConnection");
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                postService = new PostService(connectionString);
+                userService = new UserService(connectionString);
+                LoadUserData();
+                LoadUserPosts();
+            }
+        }
+        else Navigation.NavigateTo("/login");
+    }
+
+    private void LoadUserData()
+    {
+        if (AuthService.CurrentUser != null)
+        {
+            displayName = AuthService.CurrentUser.DisplayName ?? AuthService.CurrentUser.Username;
+            bio = AuthService.CurrentUser.Bio ?? string.Empty;
+        }
+    }
+
+    private void LoadUserPosts()
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                userPosts = postService.GetPosts(AuthService.CurrentUser.UserId, 1, 100).Where(p => p.UserId == AuthService.CurrentUser.UserId).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading user posts: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task UpdateProfile()
+    {
+        if (userService != null && AuthService.CurrentUser != null)
+        {
+            isUpdating = true;
+            statusMessage = string.Empty;
+
+            try
+            {
+                bool success = userService.UpdateProfile(
+                    AuthService.CurrentUser.UserId,
+                    displayName.Trim(),
+                    bio.Trim());
+
+                if (success)
+                {
+                    statusMessage = "Profile updated successfully!";
+                    statusClass = "alert-success";
+                    AuthService.CurrentUser.DisplayName = displayName.Trim();
+                    AuthService.CurrentUser.Bio = bio.Trim();
+                }
+                else
+                {
+                    statusMessage = "Failed to update profile.";
+                    statusClass = "alert-danger";
+                }
+            }
+            catch (Exception ex)
+            {
+                statusMessage = $"Error updating profile: {ex.Message}";
+                statusClass = "alert-danger";
+            }
+            finally
+            {
+                isUpdating = false;
+            }
+        }
+    }
+
+    private async Task DeletePost(int postId)
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                bool success = postService.DeletePost(postId, AuthService.CurrentUser.UserId);
+                if (success)
+                {
+                    userPosts.RemoveAll(p => p.PostId == postId);
+                    statusMessage = "Post deleted successfully.";
+                    statusClass = "alert-success";
+                }
+            }
+            catch (Exception ex)
+            {
+                statusMessage = $"Error deleting post: {ex.Message}";
+                statusClass = "alert-danger";
+            }
+        }
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/");
+    }
+}
+
+                    I AM GOD

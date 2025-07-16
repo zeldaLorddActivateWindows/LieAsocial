@@ -1,10 +1,329 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Home - LieAsocial</PageTitle>
 
-<h1>Hello, world!</h1>
+@if (AuthService.IsAuthenticated)
+{
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">What's happening?</h5>
+                        <EditForm Model="@this" OnValidSubmit="@CreatePost">
+                            <div class="mb-3">
+                                <InputTextArea @bind-Value="newPostContent" class="form-control"
+                                               rows="3" placeholder="Share your thoughts..." maxlength="280" />
+                                <div class="form-text">@(280 - newPostContent.Length) characters remaining</div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Posting as @AuthService.CurrentUser?.DisplayName</small>
+                                <button type="submit" class="btn btn-primary" disabled="@(string.IsNullOrWhiteSpace(newPostContent) || isPosting)">
+                                    @if (isPosting)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span>Posting...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Post</span>
+                                    }
+                                </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
 
+                <!-- feed here-->
+                <div class="posts-feed">
+                    @if (posts.Any())
+                    {
+                        @foreach (var post in posts)
+                        {
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start">
+                                        <div class="avatar me-3">
+                                            @if (!string.IsNullOrEmpty(post.ProfilePictureUrl))
+                                            {
+                                                <img src="@post.ProfilePictureUrl" alt="@post.DisplayName" class="rounded-circle" width="40" height="40">
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                    <span class="text-white fw-bold">@post.DisplayName.First()</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <strong class="me-2">@post.DisplayName</strong>
+                                                <small class="text-muted">@@@post.Username</small>
+                                                <small class="text-muted ms-2">• @GetRelativeTime(post.DateCreated)</small>
+                                                @if (post.UserId == AuthService.CurrentUser?.UserId)
+                                                {
+                                                    <button class="btn btn-sm btn-outline-danger ms-auto" @onclick="@(() => DeletePost(post.PostId))">
+                                                        Delete
+                                                    </button>
+                                                }
+                                            </div>
+                                            <p class="mb-2">@post.Content</p>
+                                            <div class="d-flex align-items-center">
+                                                <button class="btn btn-sm @(post.IsLikedByCurrentUser ? "btn-danger" : "btn-outline-secondary") me-3"
+                                                        @onclick="@(() => ToggleLike(post))">
+                                                    <i class="@(post.IsLikedByCurrentUser ? "fas" : "far") fa-heart me-1"></i>
+                                                    @post.LikeCount
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary me-3">
+                                                    <i class="far fa-comment me-1"></i>
+                                                    @post.CommentCount
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <h4>No posts yet</h4>
+                            <p class="text-muted">Be the first to share something!</p>
+                        </div>
+                    }
+                </div>
+
+                @if (posts.Any())
+                {
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary" @onclick="LoadMorePosts" disabled="@isLoadingMore">
+                            @if (isLoadingMore)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>Loading...</span>
+                            }
+                            else
+                            {
+                                <span>Load More</span>
+                            }
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <!-- sidebar -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Profile</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            @if (!string.IsNullOrEmpty(AuthService.CurrentUser?.ProfilePictureUrl))
+                            {
+                                <img src="@AuthService.CurrentUser.ProfilePictureUrl" alt="@AuthService.CurrentUser.DisplayName"
+                                     class="rounded-circle me-3" width="50" height="50">
+                            }
+                            else
+                            {
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                     style="width: 50px; height: 50px;">
+                                    <span class="text-white fw-bold">@AuthService.CurrentUser?.DisplayName?.First()</span>
+                                </div>
+                            }
+                            <div>
+                                <strong>@AuthService.CurrentUser?.DisplayName</strong>
+                                <br>
+                                <small class="text-muted">@@@AuthService.CurrentUser?.Username</small>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(AuthService.CurrentUser?.Bio))
+                        {
+                            <p class="text-muted">@AuthService.CurrentUser.Bio</p>
+                        }
+                        <a href="/profile" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Trending</h5>
+                        <p class="text-muted">Coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4 mb-4">Welcome to LieAsocial</h1>
+                <p class="lead mb-4">Connect with friends and share what's happening in your world.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/login" class="btn btn-primary btn-lg">Login</a>
+                    <a href="/registration" class="btn btn-outline-primary btn-lg">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
-    
+    private List<Post> posts = new();
+    private string newPostContent = string.Empty;
+    private bool isPosting = false;
+    private bool isLoadingMore = false;
+    private int currentPage = 1;
+    private PostService? postService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+        if (AuthService.IsAuthenticated)
+        {
+            var connectionString = Configuration.GetConnectionString("OdbcConnection");
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                postService = new PostService(connectionString);
+                await LoadPosts();
+            }
+        }
+
+        AuthService.UserChanged += OnUserChanged;
+    }
+
+    private async void OnUserChanged(User? user)
+    {
+        if (user != null && postService != null)
+        {
+            await LoadPosts();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task LoadPosts()
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                posts = postService.GetPosts(AuthService.CurrentUser.UserId, 1, 20);
+                currentPage = 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading posts: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task LoadMorePosts()
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            isLoadingMore = true;
+            try
+            {
+                currentPage++;
+                var newPosts = postService.GetPosts(AuthService.CurrentUser.UserId, currentPage, 20);
+                posts.AddRange(newPosts);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading more posts: {ex.Message}");
+                currentPage--;
+            }
+            finally
+            {
+                isLoadingMore = false;
+            }
+        }
+    }
+
+    private async Task CreatePost()
+    {
+        if (postService != null && AuthService.CurrentUser != null && !string.IsNullOrWhiteSpace(newPostContent))
+        {
+            isPosting = true;
+            try
+            {
+                bool success = postService.CreatePost(AuthService.CurrentUser.UserId, newPostContent.Trim());
+                if (success)
+                {
+                    newPostContent = string.Empty;
+                    await LoadPosts();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating post: {ex.Message}");
+            }
+            finally
+            {
+                isPosting = false;
+            }
+        }
+    }
+
+    private async Task ToggleLike(Post post)
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                if (post.IsLikedByCurrentUser)
+                {
+                    postService.UnlikePost(post.PostId, AuthService.CurrentUser.UserId);
+                    post.LikeCount--;
+                    post.IsLikedByCurrentUser = false;
+                }
+                else
+                {
+                    postService.LikePost(post.PostId, AuthService.CurrentUser.UserId);
+                    post.LikeCount++;
+                    post.IsLikedByCurrentUser = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error toggling like: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task DeletePost(int postId)
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                bool success = postService.DeletePost(postId, AuthService.CurrentUser.UserId);
+                if (success) posts.RemoveAll(p => p.PostId == postId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting post: {ex.Message}");
+            }
+        }
+    }
+
+    private string GetRelativeTime(DateTime dateTime)
+    {
+        var timeSpan = DateTime.Now - dateTime;
+
+        if (timeSpan.TotalMinutes < 1) return "just now";
+        if (timeSpan.TotalMinutes < 60) return $"{(int)timeSpan.TotalMinutes}m";
+        if (timeSpan.TotalHours < 24) return $"{(int)timeSpan.TotalHours}h";
+        if (timeSpan.TotalDays < 7) return $"{(int)timeSpan.TotalDays}d";
+        return dateTime.ToString("MMM d");
+    }
+
+    public void Dispose() => AuthService.UserChanged -= OnUserChanged;
 }
