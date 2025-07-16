@@ -10,7 +10,7 @@ namespace LieAsocial
         public string? Password
         {
             get => password;
-            set => password = value;
+            set => password = HasFourIntegers(value!) && value?.Length >= 8  ? value : throw new Exception("Password must be at least 8 long and contain 4 or more numbers.");
         }
         public string? Email { get; set; }
         private readonly string _connectionString;
@@ -30,14 +30,14 @@ namespace LieAsocial
             return matches.Count >= 4;
         }
 
-        public void RegisterUser()
+        public bool RegisterUser()
         {
             try
             {
-                using var connection = new OdbcConnection(_connectionString);
+                var connection = new OdbcConnection(_connectionString);
                 connection.Open();
 
-                using var checkCommand = new OdbcCommand("SELECT COUNT(*) FROM users WHERE Email = ?", connection);
+                var checkCommand = new OdbcCommand("SELECT COUNT(*) FROM users WHERE Email = ?", connection);
                 checkCommand.Parameters.AddWithValue("@email", Email);
 
                 int count = Convert.ToInt32(checkCommand.ExecuteScalar());
@@ -50,6 +50,7 @@ namespace LieAsocial
 
                 int rowsAffected = insertCommand.ExecuteNonQuery();
                 if (rowsAffected == 0) throw new Exception("Failed to register user");
+                else return true;
             }
             catch (OdbcException ex)
             {
