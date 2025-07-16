@@ -1,44 +1,84 @@
 ﻿@page "/login"
-@using System.IO
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 @inject NavigationManager Navigation
+@inject AuthService AuthService
 @rendermode InteractiveServer
 
 <PageTitle>Login</PageTitle>
 
-<h2>Login</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Login to LieAsocial</h2>
 
-<EditForm Model="@this" FormName="loginForm" OnValidSubmit="@HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+                    <EditForm Model="@this" FormName="loginForm" OnValidSubmit="@HandleLogin">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
 
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <InputText @bind-Value="username" id="username" class="form-control" />
-        <ValidationMessage For="@(() => username)" />
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <InputText @bind-Value="username" id="username" class="form-control" placeholder="Enter your username" />
+                            <ValidationMessage For="@(() => username)" />
+                        </div>
 
-        <label for="password">Password:</label>
-        <InputText type="password" @bind-Value="password" id="password" class="form-control" />
-        <ValidationMessage For="@(() => password)" />
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <InputText type="password" @bind-Value="password" id="password" class="form-control" placeholder="Enter your password" />
+                            <ValidationMessage For="@(() => password)" />
+                        </div>
 
-        <button type="submit" class="btn btn-primary">Login</button>
+                        <button type="submit" class="btn btn-primary w-100" disabled="@isLoading">
+                            @if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>Logging in...</span>
+                            }
+                            else
+                            {
+                                <span>Login</span>
+                            }
+                        </button>
 
-        @if (!string.IsNullOrEmpty(statusMessage))
-        {
-            <div class="alert @statusClass mt-3">@statusMessage</div>
-        }
+                        @if (!string.IsNullOrEmpty(statusMessage))
+                        {
+                            <div class="alert @statusClass mt-3">@statusMessage</div>
+                        }
+                    </EditForm>
+
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="/registration">Sign up here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</EditForm>
+</div>
 
 @code {
     private string username = string.Empty;
     private string password = string.Empty;
     private string statusMessage = string.Empty;
     private string statusClass = "alert-success";
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+
+        if (AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
 
     private async Task HandleLogin()
     {
+        isLoading = true;
+        statusMessage = string.Empty;
+
         try
         {
             var connectionString = Configuration.GetConnectionString("OdbcConnection");
@@ -49,14 +89,15 @@
                 statusClass = "alert-danger";
                 return;
             }
-            var loginUser = new LoginUser(username: username, password: password, connectionString);
-            bool isAuthenticated = loginUser.ValidateLogin();
 
-            if (isAuthenticated)
+            var loginUser = new LoginUser(username: username, password: password, connectionString);
+            bool success = await AuthService.LoginAsync(loginUser);
+
+            if (success)
             {
                 statusMessage = "Login successful! Redirecting...";
                 statusClass = "alert-success";
-                await Task.Delay(1500);
+                await Task.Delay(1000);
                 Navigation.NavigateTo("/");
             }
             else
@@ -69,6 +110,10 @@
         {
             statusMessage = $"Login failed: {ex.Message}";
             statusClass = "alert-danger";
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 }
