@@ -1,0 +1,190 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:readme.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\src\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:src\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\components\\pages\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:components\\pages\\login.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\components\\pages\\registration.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:components\\pages\\registration.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\src\\loginuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:src\\loginuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|c:\\users\\pc\\onedrive - htl v\u00F6cklabruck\\desktop\\pjhq\\lieasocial\\wwwroot\\bootstrap\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{1DD33572-087A-481B-8896-A84A213B9006}|LieAsocial.csproj|solutionrelative:wwwroot\\bootstrap\\bootstrap.min.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwBsAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T11:21:45.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-07-15T10:56:39.752Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Registration.razor",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Components\\Pages\\Registration.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Registration.razor",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Components\\Pages\\Registration.razor",
+              "RelativeToolTip": "Components\\Pages\\Registration.razor",
+              "ViewState": "AgIAACMAAAAAAAAAAAAQwEEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-15T10:48:23.841Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Registration.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\src\\Registration.cs",
+              "RelativeDocumentMoniker": "src\\Registration.cs",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\src\\Registration.cs",
+              "RelativeToolTip": "src\\Registration.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAwAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T10:46:16.676Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Login.razor",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Components\\Pages\\Login.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Login.razor",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Components\\Pages\\Login.razor",
+              "RelativeToolTip": "Components\\Pages\\Login.razor",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAwCQAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-15T10:44:36.816Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoginUser.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\src\\LoginUser.cs",
+              "RelativeDocumentMoniker": "src\\LoginUser.cs",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\src\\LoginUser.cs",
+              "RelativeToolTip": "src\\LoginUser.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAuwBEAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T10:44:26.091Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG/SURBVDhPrZRNTgIxFMerDIaEhHgU97JxwUKGGaNeQJdyCY0XUBDWGhg4AB\u002BuvQk7OQCRFTP1fXWmMxUMCT94ee177eu/LVQdFK31kTSJ0WgEIa0SMJ2A6QTHcF9iicQqlYpa/6zv2\u002B2HD5nuEkWR/l4udRzHZBtjGzFor1YrPR6P9WKx0MNhpN96vTuZThyLJ1AJLK/iJFFxjBanBsXIozqkWq2qev1c1Wq19063e0ZBwBNP4JaQ6WRC/i8ajQb5wWBAvnxyghpOqQPkC8L5IEEQKjgxaqOTFsCd65tb6nmlkur1\u002BxwXCgX58KfT7QptwvCK52wrSLcJvtUKOABkQ6HFXwbGsmMRBkchzpjNphLZDSrEn5G1qnsp\u002BPEtheloXouRnXDTTjhb5tXmeyg0IgzuliHp\u002By0OANbiOCDXp1IYo3mMUxBT8/mMA/8QhGH6ZzC4Zwi5ZqoQB9M3h62I/\u002B/SAQpniBmtPvdQyGeYUdgyX8pl05eIBSxmTzQYEYbc42AuJQWLGJNQEcrJG4A4BTHneSW2sqfKOyybkxXMPbAvrx3IsyLzkPJFmUcWYtDntjG6lIvnp8cvKXNIlPoFvstpJRlQPIAAAAAASUVORK5CYII=",
+              "WhenOpened": "2025-07-15T10:35:03.241Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\README.md",
+              "RelativeDocumentMoniker": "README.md",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\README.md",
+              "RelativeToolTip": "README.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2025-07-15T10:34:58.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAQwAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T10:34:52.436Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "bootstrap.min.css",
+              "DocumentMoniker": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\wwwroot\\bootstrap\\bootstrap.min.css",
+              "RelativeDocumentMoniker": "wwwroot\\bootstrap\\bootstrap.min.css",
+              "ToolTip": "C:\\Users\\PC\\OneDrive - HTL V\u00F6cklabruck\\Desktop\\PJHQ\\LieAsocial\\wwwroot\\bootstrap\\bootstrap.min.css",
+              "RelativeToolTip": "wwwroot\\bootstrap\\bootstrap.min.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-07-15T10:34:49.969Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

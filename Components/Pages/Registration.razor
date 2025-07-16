@@ -5,7 +5,7 @@
 
 <h2>Registration</h2>
 
-<EditForm Model="@this" OnValidSubmit="@Register" Context="formContext">
+<EditForm Model="@this" FormName="registrationForm" OnValidSubmit="@Register">
     <DataAnnotationsValidator />
     <ValidationSummary />
 

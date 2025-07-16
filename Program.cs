@@ -1,4 +1,6 @@
 using LieAsocial.Components;
+using LieAsocial.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LieAsocial
 {
@@ -12,8 +14,12 @@ namespace LieAsocial
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            var app = builder.Build();
+            // Move AddDbContext before builder.Build()
             builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("OdbcConnection")));
+
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

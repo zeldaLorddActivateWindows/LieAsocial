@@ -10,7 +10,7 @@ namespace LieAsocial
         public string? Password
         {
             get => password;
-            set => password = value?.Length >= 8 && HasFourIntegers(value) ? value : throw new Exception("Password must contain at least 4 numbers and be 8+ characters");
+            set => password = value;//= value?.Length >= 8 && HasFourIntegers(value) ? value : throw new Exception("Password must contain at least 4 numbers and be 8+ characters");
         }
         public string? Email { get; set; }
         private readonly string _connectionString;

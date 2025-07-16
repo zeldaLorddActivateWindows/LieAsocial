@@ -6,7 +6,7 @@
 
 <h2>Login</h2>
 
-<EditForm Model="@this" OnValidSubmit="@HandleLogin" Context="formContext">
+<EditForm Model="@this" FormName="loginForm" OnValidSubmit="@HandleLogin">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
@@ -34,7 +34,8 @@
     private string statusMessage = string.Empty;
     private string statusClass = "alert-success";
 
-    private async Task HandleLogin() {
+    private async Task HandleLogin()
+    {
         try
         {
             var connectionString = Configuration.GetConnectionString("OdbcConnection");
@@ -45,7 +46,7 @@
                 statusClass = "alert-danger";
                 return;
             }
-            var loginUser = new LoginUser(username, password, connectionString);
+            var loginUser = new LoginUser(username: username, password: password, connectionString);
             bool isAuthenticated = loginUser.ValidateLogin();
 
             if (isAuthenticated)
