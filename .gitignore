@@ -39,3 +39,4 @@ yarn-error.log*
 # Others
 .DS_Store
 Thumbs.db
+.vs/
