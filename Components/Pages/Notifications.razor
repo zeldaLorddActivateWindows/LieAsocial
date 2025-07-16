@@ -1,0 +1,68 @@
+﻿@page "/notifications"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Notifications - LieAsocial</PageTitle>
+
+@if (AuthService.IsAuthenticated)
+{
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2>Notifications</h2>
+
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-bell fa-3x text-muted mb-3"></i>
+                        <h4>No notifications yet</h4>
+                        <p class="text-muted">When someone likes or comments on your posts, you'll see it here.</p>
+                        <a href="/" class="btn btn-primary">Go to Home</a>
+                    </div>
+                </div>
+
+                <!--
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start">
+                            <div class="avatar me-3">
+                                <div class="bg-info rounded-circle d-flex align-items-center justify-content-center"
+                                     style="width: 40px; height: 40px;">
+                                    <i class="fas fa-heart text-white"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="mb-1">
+                                    <strong>John Doe</strong> liked your post
+                                </p>
+                                <small class="text-muted">2 hours ago</small>
+                                <p class="text-muted mt-2 mb-0">"This is a great post about..."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <h3>Access Denied</h3>
+                <p>You need to be logged in to view notifications.</p>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+        if (!AuthService.IsAuthenticated) Navigation.NavigateTo("/login");
+    }
+}

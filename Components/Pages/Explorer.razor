@@ -1,0 +1,251 @@
+﻿@page "/explore"
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Explore - LieAsocial</PageTitle>
+
+@if (AuthService.IsAuthenticated)
+{
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>Explore</h2>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Search Users</h5>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for users..."
+                                   @bind="searchQuery" @onkeypress="@(async (e) => { if (e.Key == "Enter") await SearchUsers(); })">
+                            <button class="btn btn-primary" type="button" @onclick="SearchUsers" disabled="@isSearching">
+                                @if (isSearching)
+                                {
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-search"></i>
+                                }
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @if (searchResults.Any())
+                {
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h6 class="card-title">Search Results</h6>
+                            @foreach (var user in searchResults)
+                            {
+                                <div class="d-flex align-items-center mb-3 p-2 border rounded">
+                                    @if (!string.IsNullOrEmpty(user.ProfilePictureUrl))
+                                    {
+                                        <img src="@user.ProfilePictureUrl" alt="@user.DisplayName"
+                                             class="rounded-circle me-3" width="40" height="40">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                             style="width: 40px; height: 40px;">
+                                            <span class="text-white fw-bold">@user.DisplayName.First()</span>
+                                        </div>
+                                    }
+                                    <div class="flex-grow-1">
+                                        <strong>@user.DisplayName</strong>
+                                        <br>
+                                        <small class="text-muted">@@@user.Username</small>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        Follow
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Trending Posts</h5>
+                        @if (trendingPosts.Any())
+                        {
+                            @foreach (var post in trendingPosts)
+                            {
+                                <div class="mb-3 p-3 border rounded">
+                                    <div class="d-flex align-items-start">
+                                        <div class="avatar me-3">
+                                            @if (!string.IsNullOrEmpty(post.ProfilePictureUrl))
+                                            {
+                                                <img src="@post.ProfilePictureUrl" alt="@post.DisplayName"
+                                                     class="rounded-circle" width="40" height="40">
+                                            }
+                                            else
+                                            {
+                                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                                                     style="width: 40px; height: 40px;">
+                                                    <span class="text-white fw-bold">@post.DisplayName.First()</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <strong class="me-2">@post.DisplayName</strong>
+                                                <small class="text-muted">@@@post.Username</small>
+                                                <small class="text-muted ms-2">• @GetRelativeTime(post.DateCreated)</small>
+                                            </div>
+                                            <p class="mb-2">@post.Content</p>
+                                            <div class="d-flex align-items-center">
+                                                <button class="btn btn-sm @(post.IsLikedByCurrentUser ? "btn-danger" : "btn-outline-secondary") me-3"
+                                                        @onclick="@(() => ToggleLike(post))">
+                                                    <i class="@(post.IsLikedByCurrentUser ? "fas" : "far") fa-heart me-1"></i>
+                                                    @post.LikeCount
+                                                </button>
+                                                <small class="text-muted">
+                                                    <i class="far fa-comment me-1"></i>
+                                                    @post.CommentCount
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else { <p class="text-muted">No trending posts available.</p> }
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Suggested for You</h6>
+                        <p class="text-muted">Coming soon...</p>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">What's Happening</h6>
+                        <p class="text-muted">Trending topics will appear here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <h3>Access Denied</h3>
+                <p>You need to be logged in to explore.</p>
+                <a href="/login" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string searchQuery = string.Empty;
+    private bool isSearching = false;
+    private List<User> searchResults = new();
+    private List<Post> trendingPosts = new();
+    private PostService? postService;
+    private UserService? userService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+        if (AuthService.IsAuthenticated)
+        {
+            var connectionString = Configuration.GetConnectionString("OdbcConnection");
+            if (!string.IsNullOrEmpty(connectionString))
+            {
+                postService = new PostService(connectionString);
+                userService = new UserService(connectionString);
+                await LoadTrendingPosts();
+            }
+        }
+        else
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+
+    private async Task SearchUsers()
+    {
+        if (userService != null && !string.IsNullOrWhiteSpace(searchQuery))
+        {
+            isSearching = true;
+            try
+            {
+                searchResults = userService.SearchUsers(searchQuery.Trim(), 10);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error searching users: {ex.Message}");
+            }
+            finally
+            {
+                isSearching = false;
+            }
+        }
+    }
+
+    private async Task LoadTrendingPosts()
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                trendingPosts = postService.GetPosts(AuthService.CurrentUser.UserId, 1, 10).Where(p => p.LikeCount > 0 || p.CommentCount > 0).OrderByDescending(p => p.LikeCount + p.CommentCount).Take(5).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading trending posts: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task ToggleLike(Post post)
+    {
+        if (postService != null && AuthService.CurrentUser != null)
+        {
+            try
+            {
+                if (post.IsLikedByCurrentUser)
+                {
+                    postService.UnlikePost(post.PostId, AuthService.CurrentUser.UserId);
+                    post.LikeCount--;
+                    post.IsLikedByCurrentUser = false;
+                }
+                else
+                {
+                    postService.LikePost(post.PostId, AuthService.CurrentUser.UserId);
+                    post.LikeCount++;
+                    post.IsLikedByCurrentUser = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error toggling like: {ex.Message}");
+            }
+        }
+    }
+
+    private string GetRelativeTime(DateTime dateTime)
+    {
+        var timeSpan = DateTime.Now - dateTime;
+
+        if (timeSpan.TotalMinutes < 1) return "just now";
+        if (timeSpan.TotalMinutes < 60) return $"{(int)timeSpan.TotalMinutes}m";
+        if (timeSpan.TotalHours < 24) return $"{(int)timeSpan.TotalHours}h";
+        if (timeSpan.TotalDays < 7) return $"{(int)timeSpan.TotalDays}d";
+        return dateTime.ToString("MMM d");
+    }
+}
