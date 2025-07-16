@@ -31,13 +31,14 @@ namespace LieAsocial
         {
             try
             {
-                var connection = new OdbcConnection(_connectionString);
+                using var connection = new OdbcConnection(_connectionString);
                 connection.Open();
                 var getCommand = new OdbcCommand("SELECT PasswordHash, PasswordSalt FROM users WHERE Username = ?", connection);
                 getCommand.Parameters.AddWithValue("@username", Username);
 
                 using var reader = getCommand.ExecuteReader();
                 if (!reader.Read()) return false;
+
                 string storedHash = reader.GetString(0);
                 byte[] storedSalt = Convert.FromBase64String(reader.GetString(1));
                 string hashedPassword = HashPassword(PlainPassword, storedSalt);
@@ -53,7 +54,7 @@ namespace LieAsocial
         {
             try
             {
-                var connection = new OdbcConnection(_connectionString);
+                using var connection = new OdbcConnection(_connectionString);
                 connection.Open();
                 var updateCommand = new OdbcCommand("UPDATE users SET LastLogin = CURRENT_TIMESTAMP WHERE Username = ?", connection);
                 updateCommand.Parameters.AddWithValue("@username", Username);
@@ -62,6 +63,24 @@ namespace LieAsocial
             catch (OdbcException ex)
             {
                 Console.WriteLine($"Warning: Could not update last login time: {ex.Message}");
+            }
+        }
+
+        public int? GetUserId()
+        {
+            try
+            {
+                using var connection = new OdbcConnection(_connectionString);
+                connection.Open();
+                var command = new OdbcCommand("SELECT UserId FROM users WHERE Username = ?", connection);
+                command.Parameters.AddWithValue("@username", Username);
+
+                var result = command.ExecuteScalar();
+                return result != null ? Convert.ToInt32(result) : null;
+            }
+            catch (OdbcException ex)
+            {
+                throw new Exception($"Database error getting user ID: {ex.Message}", ex);
             }
         }
     }
