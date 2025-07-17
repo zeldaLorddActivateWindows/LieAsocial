@@ -1,38 +1,169 @@
 ﻿@page "/registration"
-@using System.IO
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <PageTitle>Registration</PageTitle>
 
-<h2>Registration</h2>
-
-<EditForm Model="@this" FormName="registrationForm" OnValidSubmit="@Register">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="form-group">
-        <label for="username">Username:</label>
-        <InputText @bind-Value="username" id="username" class="form-control" />
-        <ValidationMessage For="@(() => username)" />
-
-        <label for="email">E-Mail:</label>
-        <InputText @bind-Value="email" id="email" class="form-control" />
-        <ValidationMessage For="@(() => email)" />
-
-        <label for="password">Password:</label>
-        <InputText type="password" @bind-Value="password" id="password" class="form-control" />
-        <ValidationMessage For="@(() => password)" />
-
-        <button type="submit" class="btn btn-primary">Register</button>
-
-        @if (!string.IsNullOrEmpty(statusMessage))
-        {
-            <div class="alert @statusClass mt-3">@statusMessage</div>
-        }
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow" style="
+                border-radius: 16px;
+                overflow: hidden;
+                background: hsl(0, 0%, 100%);
+                border: 1px solid hsl(240, 20%, 95%);
+            ">
+                <div class="card-header p-4 text-center" style="
+                    background: linear-gradient(
+                        135deg,
+                        hsl(350, 83%, 65%) 0%,
+                        hsl(350, 100%, 50%) 100%
+                    );
+                ">
+                    <h2 class="card-title mb-0" style="
+                        color: hsl(0, 0%, 100%);
+                        font-weight: 700;
+                        letter-spacing: 0.5px;
+                    ">
+                        Create Your Account
+                    </h2>
+                </div>
+                <div class="card-body p-4" style="background: hsl(240, 20%, 98%)">
+                    <EditForm Model="@this" FormName="registrationForm" OnValidSubmit="@Register">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" />
+                        <div class="mb-4">
+                            <label for="username" class="form-label" style="
+                                color: hsl(350, 100%, 35%);
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                            ">
+                                Username
+                            </label>
+                            <InputText @bind-Value="username" id="username"
+                                       class="form-control"
+                                       style="
+                                        border-radius: 8px;
+                                        border: 2px solid hsl(240, 20%, 90%);
+                                        padding: 10px 12px;
+                                        background: hsl(0, 0%, 100%);
+                                     "
+                                       placeholder="Enter your username" />
+                            <ValidationMessage For="@(() => username)"
+                                               class="text-danger small mt-1" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="form-label" style="
+                                color: hsl(350, 100%, 35%);
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                            ">
+                                Email
+                            </label>
+                            <InputText @bind-Value="email" id="email"
+                                       class="form-control"
+                                       style="
+                                        border-radius: 8px;
+                                        border: 2px solid hsl(240, 20%, 90%);
+                                        padding: 10px 12px;
+                                        background: hsl(0, 0%, 100%);
+                                     "
+                                       placeholder="your@email.com" />
+                            <ValidationMessage For="@(() => email)"
+                                               class="text-danger small mt-1" />
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label" style="
+                                color: hsl(350, 100%, 35%);
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                            ">
+                                Password
+                            </label>
+                            <InputText type="password" @bind-Value="password"
+                                       id="password" class="form-control"
+                                       style="
+                                        border-radius: 8px;
+                                        border: 2px solid hsl(240, 20%, 90%);
+                                        padding: 10px 12px;
+                                        background: hsl(0, 0%, 100%);
+                                     "
+                                       placeholder="••••••••" />
+                            <ValidationMessage For="@(() => password)"
+                                               class="text-danger small mt-1" />
+                        </div>
+                        <button type="submit" class="btn w-100 py-3 fw-bold"
+                                style="
+                                    border-radius: 8px;
+                                    background: linear-gradient(
+                                        135deg,
+                                        hsl(350, 83%, 65%) 0%,
+                                        hsl(350, 100%, 50%) 100%
+                                    );
+                                    color: hsl(0, 0%, 100%);
+                                    border: none;
+                                    transition: all 0.3s ease;
+                                "
+                                disabled="@isLoading"
+                                onmouseover="this.style.opacity='0.9'"
+                                onmouseout="this.style.opacity='1'">
+                            @if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2"
+                                      role="status" aria-hidden="true"></span>
+                                <span>Creating Account...</span>
+                            }
+                            else
+                            {
+                                <span>Register Now</span>
+                            }
+                        </button>
+                        @if (!string.IsNullOrEmpty(statusMessage))
+                        {
+                            <div class="alert mt-4 p-3" style="
+                                    border-radius: 8px;
+                                    border-left: 4px solid @(statusClass == "alert-success" ? "hsl(120, 73%, 75%)" : "hsl(0, 69%, 70%)");
+                                    background: @(statusClass == "alert-success" ? "hsl(120, 73%, 97%)" : "hsl(0, 69%, 97%)");
+                                    color: @(statusClass == "alert-success" ? "hsl(120, 100%, 25%)" : "hsl(0, 100%, 35%)");
+                                ">
+                                @statusMessage
+                            </div>
+                        }
+                    </EditForm>
+                    <div class="text-center mt-4 pt-3" style="
+                        border-top: 1px solid hsl(240, 20%, 90%);
+                    ">
+                        <p class="mb-0" style="color: hsl(240, 10%, 50%)">
+                            Already have an account?
+                            <a href="/login" style="
+                                color: hsl(350, 100%, 50%);
+                                text-decoration: none;
+                                font-weight: 600;
+                            ">
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</EditForm>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: hsl(350, 100%, 70%) !important;
+        box-shadow: 0 0 0 0.25rem hsla(350, 100%, 50%, 0.15);
+        outline: none;
+    }
+
+    a:hover {
+        color: hsl(350, 83%, 65%) !important;
+        text-decoration: underline !important;
+    }
+</style>
 
 @code {
     private string username = string.Empty;
@@ -40,9 +171,11 @@
     private string password = string.Empty;
     private string statusMessage = string.Empty;
     private string statusClass = "alert-success";
+    private bool isLoading = false;
 
     private async Task Register()
     {
+        isLoading = true;
         try
         {
             var connectionString = Configuration.GetConnectionString("OdbcConnection");
@@ -53,17 +186,24 @@
                 statusClass = "alert-danger";
                 return;
             }
-            
+
             var newUser = new NewUser(username, password, email, connectionString);
             newUser.RegisterUser();
 
-            statusMessage = "Registration successful!";
+            statusMessage = "🎉 Registration successful! Redirecting to login...";
             statusClass = "alert-success";
+
+            await Task.Delay(1500);
+            Navigation.NavigateTo("/login");
         }
         catch (Exception ex)
         {
-            statusMessage = $"Registration failed: {ex.Message}";
+            statusMessage = $"⚠️ Registration failed: {ex.Message}";
             statusClass = "alert-danger";
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 }
