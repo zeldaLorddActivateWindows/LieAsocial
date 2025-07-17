@@ -9,6 +9,7 @@ namespace LieAsocial
         private readonly UserService _userService;
         private User? _currentUser;
         private string? _sessionId;
+        private readonly SemaphoreSlim _semaphore = new(1, 1);
 
         public AuthService(ProtectedLocalStorage localStorage, UserService userService)
         {
@@ -23,6 +24,7 @@ namespace LieAsocial
 
         public async Task<bool> InitializeAsync()
         {
+            await _semaphore.WaitAsync();
             try
             {
                 var sessionResult = await _localStorage.GetAsync<string>("sessionId");
@@ -44,7 +46,10 @@ namespace LieAsocial
             {
                 Console.WriteLine(ex.Message);
             }
-
+            finally
+            {
+                _semaphore.Release();
+            }
             return false;
         }
 

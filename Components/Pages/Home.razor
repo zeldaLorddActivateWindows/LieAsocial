@@ -72,8 +72,7 @@
                                                     </button>
                                                 }
                                             </div>
-                                            <p class="mb-2">@post.Content</p>
-                                            <div class="d-flex align-items-center">
+                                            <p class="mb-2">@((MarkupString)System.Web.HttpUtility.HtmlEncode(post.Content))</p>                                            <div class="d-flex align-items-center">
                                                 <button class="btn btn-sm @(post.IsLikedByCurrentUser ? "btn-danger" : "btn-outline-secondary") me-3"
                                                         @onclick="@(() => ToggleLike(post))">
                                                     <i class="@(post.IsLikedByCurrentUser ? "fas" : "far") fa-heart me-1"></i>
