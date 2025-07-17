@@ -38,6 +38,12 @@
             </div>
 
             <div class="nav-item px-3">
+                <NavLink class="nav-link" href="trending">
+                    <span class="bi bi-trending-up-nav-menu" aria-hidden="true"></span> Trending
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
                 <button class="nav-link btn btn-link text-start w-100" @onclick="Logout">
                     <span class="bi bi-box-arrow-right-nav-menu" aria-hidden="true"></span> Logout
                 </button>
@@ -70,5 +76,4 @@
     private async void OnUserChanged(User? user) => await InvokeAsync(StateHasChanged);
     private async Task Logout() => await AuthService.LogoutAsync();
     public void Dispose() => AuthService.UserChanged -= OnUserChanged;
-    
 }
