@@ -11,7 +11,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm" style="background-color: hsl(0, 0%, 100%);">
-                <div class="card-header border-0" style="background-color: hsl(150, 100%, 45%); color: hsl(0, 0%, 100%);">
+                <div class="card-header border-0" style="background-color: hsl(170, 100%, 45%); color: hsl(0, 0%, 100%);">
                     <h3 class="text-center mb-0">Login to LieAsocial</h3>
                 </div>
                 <div class="card-body" style="background-color: hsl(0, 0%, 98%);">
@@ -20,24 +20,24 @@
                         <ValidationSummary class="text-danger" />
 
                         <div class="form-group mb-3">
-                            <label for="username" class="form-label" style="color: hsl(150, 100%, 25%);">Username</label>
+                            <label for="username" class="form-label" style="color: hsl(170, 100%, 25%);">Username</label>
                             <InputText @bind-Value="username" id="username" class="form-control"
                                        placeholder="Enter username"
-                                       style="background-color: hsl(0, 0%, 100%); border-color: hsl(150, 20%, 85%);" />
+                                       style="background-color: hsl(0, 0%, 100%); border-color: hsl(170, 20%, 85%);" />
                             <ValidationMessage For="@(() => username)" class="text-danger" />
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="password" class="form-label" style="color: hsl(150, 100%, 25%);">Password</label>
+                            <label for="password" class="form-label" style="color: hsl(170, 100%, 25%);">Password</label>
                             <InputText type="password" @bind-Value="password" id="password" class="form-control"
                                        placeholder="Enter password"
-                                       style="background-color: hsl(0, 0%, 100%); border-color: hsl(210, 20%, 85%);" />
+                                       style="background-color: hsl(0, 0%, 100%); border-color: hsl(170, 20%, 85%);" />
                             <ValidationMessage For="@(() => password)" class="text-danger" />
                         </div>
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn" disabled="@isLoading"
-                                    style="background-color: hsl(150, 100%, 45%); color: hsl(0, 0%, 100%); border: none;">
+                                    style="background-color: hsl(170, 100%, 45%); color: hsl(0, 0%, 100%); border: none;">
                                 @if (isLoading)
                                 {
                                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -52,16 +52,16 @@
 
                         @if (!string.IsNullOrEmpty(statusMessage))
                         {
-                            <div class="alert @statusClass mt-3 mb-0" style="background-color: @(statusClass == "alert-success" ? "hsl(120, 100%, 95%)" : "hsl(0, 100%, 95%)");
-                                            border-color: @(statusClass == "alert-success" ? "hsl(120, 100%, 85%)" : "hsl(0, 100%, 85%)");
-                                            color: @(statusClass == "alert-success" ? "hsl(120, 100%, 25%)" : "hsl(0, 100%, 25%)");">
+                            <div class="alert @statusClass mt-3 mb-0" style="background-color: @(statusClass == "alert-success" ? "hsl(170, 100%, 95%)" : "hsl(0, 100%, 95%)");
+                                            border-color: @(statusClass == "alert-success" ? "hsl(170, 100%, 85%)" : "hsl(0, 100%, 85%)");
+                                            color: @(statusClass == "alert-success" ? "hsl(170, 100%, 25%)" : "hsl(0, 100%, 25%)");">
                                 @statusMessage
                             </div>
                         }
                     </EditForm>
                 </div>
-                <div class="card-footer text-center border-0" style="background-color: hsl(0, 0%, 98%); color: hsl(150, 100%, 25%);">
-                    Don't have an account? <a href="/registration" style="color: hsl(150, 100%, 45%);">Sign up here</a>
+                <div class="card-footer text-center border-0" style="background-color: hsl(0, 0%, 98%); color: hsl(170, 100%, 25%);">
+                    Don't have an account? <a href="/registration" style="color: hsl(170, 100%, 45%);">Sign up here</a>
                 </div>
             </div>
         </div>
