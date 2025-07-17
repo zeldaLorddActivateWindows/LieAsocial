@@ -24,7 +24,10 @@ namespace LieAsocial
                 password = value;
             }
         }
-        public string? Email { get => email; set => email = IsValid(value!) ? value : throw new Exception("Invalid email"); }
+        public string? Email { 
+            get => email; 
+            set => email = IsValid(value!) ? value : throw new Exception("Invalid email"); 
+        }
         private readonly string _connectionString;
         public byte[] Salt {  get; } = RandomNumberGenerator.GetBytes(128 / 8); 
 

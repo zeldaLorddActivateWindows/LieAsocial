@@ -55,22 +55,30 @@ namespace LieAsocial
 
         public async Task<bool> LoginAsync(LoginUser loginUser)
         {
-            if (loginUser.ValidateLogin())
+            await _semaphore.WaitAsync();
+            try
             {
-                var userId = GetUserIdByUsername(loginUser.Username);
-                if (userId.HasValue)
+                if (loginUser.ValidateLogin())
                 {
-                    _currentUser = _userService.GetUserById(userId.Value);
-                    _sessionId = _userService.CreateSession(userId.Value);
+                    var userId = GetUserIdByUsername(loginUser.Username);
+                    if (userId.HasValue)
+                    {
+                        _currentUser = _userService.GetUserById(userId.Value);
+                        _sessionId = _userService.CreateSession(userId.Value);
 
-                    await _localStorage.SetAsync("sessionId", _sessionId);
+                        await _localStorage.SetAsync("sessionId", _sessionId);
 
-                    loginUser.UpdateLastLogin();
-                    UserChanged?.Invoke(_currentUser);
-                    return true;
+                        loginUser.UpdateLastLogin();
+                        UserChanged?.Invoke(_currentUser);
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            finally
+            {
+                _semaphore.Release();
+            }
         }
 
         public async Task LogoutAsync()
