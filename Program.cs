@@ -35,6 +35,12 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+    config.AddDebug();
+});
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

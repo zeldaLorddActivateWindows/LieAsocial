@@ -198,7 +198,8 @@
         }
         catch (Exception ex)
         {
-            statusMessage = $"⚠️ Registration failed: {ex.Message}";
+            Console.WriteLine($"Login error: {ex}");
+            statusMessage = "Login failed. Please check your credentials and try again.";
             statusClass = "alert-danger";
         }
         finally

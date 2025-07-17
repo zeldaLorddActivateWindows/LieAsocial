@@ -19,10 +19,9 @@ namespace LieAsocial
             {
                 var sessionId = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
                 var expiresAt = DateTime.UtcNow.AddDays(30);
-                var connection = new OdbcConnection(_connectionString);
+                using var connection = new OdbcConnection(_connectionString);
                 connection.Open();
-                var command = new OdbcCommand("INSERT INTO Sessions (SessionId, UserId, ExpiresAt) VALUES (?, ?, ?)", connection);
-
+                using var command = new OdbcCommand("INSERT INTO Sessions (SessionId, UserId, ExpiresAt) VALUES (?, ?, ?)", connection);
                 command.Parameters.AddWithValue("@sessionId", sessionId);
                 command.Parameters.AddWithValue("@userId", userId);
                 command.Parameters.AddWithValue("@expiresAt", expiresAt);
