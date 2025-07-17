@@ -9,7 +9,7 @@
 
 <style>
     body {
-        background-color: #000000 !important;
+        background-color: hsl(0, 0%, 0%) !important;
     }
 </style>
 
@@ -19,22 +19,24 @@
         <div class="row">
             <div class="col-md-8">
                 <!-- Post Creation Card -->
-                <div class="card mb-4 border-0" style="background-color: #111111; color: #cccccc;">
-                    <div class="card-header border-0" style="background-color: #000000; color: #ffffff;">
-                        <h5 class="card-title mb-0">What's happening?</h5>
+                <div class="card mb-4 border-0" style="background-color: hsl(0, 0%, 7%); color: hsl(0, 0%, 80%);">
+                    <div class="card-header border-0" style="background-color: hsl(0, 0%, 0%); color: hsl(0, 0%, 100%);">
+                        <h5 class="card-title mb-0"></h5>
+                        <h5 style="color: hsl(0, 0%, 100%);">What's happening?</h5>
+                        
                     </div>
-                    <div class="card-body" style="background-color: #1a1a1a;">
+                    <div class="card-body" style="background-color: hsl(0, 0%, 10%);">
                         <EditForm Model="@this" OnValidSubmit="@CreatePost">
                             <div class="mb-3">
                                 <InputTextArea @bind-Value="newPostContent" class="form-control"
                                                rows="3" placeholder="Share your thoughts..." maxlength="280"
-                                               style="background-color: #222222; color: #dddddd; border-color: #333333;" />
-                                <div class="form-text" style="color: #777777;">@(280 - newPostContent.Length) characters remaining</div>
+                                               style="background-color: hsl(0, 0%, 13%); color: hsl(0, 0%, 87%); border-color: hsl(0, 0%, 20%);" />
+                                <div class="form-text" style="color: hsl(0, 0%, 47%);">@(280 - newPostContent.Length) characters remaining</div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <small style="color: #777777;">Posting as @AuthService.CurrentUser?.DisplayName</small>
+                                <small style="color: hsl(0, 0%, 47%);">Posting as @AuthService.CurrentUser?.DisplayName</small>
                                 <button type="submit" class="btn" disabled="@(string.IsNullOrWhiteSpace(newPostContent) || isPosting)"
-                                        style="background-color: #333333; color: #ffffff; border: none;">
+                                        style="background-color: hsl(0, 0%, 20%); color: hsl(0, 0%, 100%); border: none;">
                                     @if (isPosting)
                                     {
                                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -56,7 +58,7 @@
                     {
                         @foreach (var post in posts)
                         {
-                            <div class="card mb-3 border-0" style="background-color: #111111;">
+                            <div class="card mb-3 border-0" style="background-color: hsl(0, 0%, 7%);">
                                 <div class="card-body">
                                     <div class="d-flex align-items-start">
                                         <div class="avatar me-3">
@@ -67,35 +69,35 @@
                                             else
                                             {
                                                 <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                                     style="width: 40px; height: 40px; background-color: #333333;">
+                                                     style="width: 40px; height: 40px; background-color: hsl(0, 0%, 20%);">
                                                     <span class="text-white fw-bold">@post.DisplayName.First()</span>
                                                 </div>
                                             }
                                         </div>
                                         <div class="flex-grow-1">
                                             <div class="d-flex align-items-center mb-2">
-                                                <strong class="me-2" style="color: #dddddd;">@post.DisplayName</strong>
-                                                <small style="color: #777777;">@@@post.Username</small>
-                                                <small class="ms-2" style="color: #777777;">• @GetRelativeTime(post.DateCreated)</small>
+                                                <strong class="me-2" style="color: hsl(0, 0%, 87%);">@post.DisplayName</strong>
+                                                <small style="color: hsl(0, 0%, 47%);">@@@post.Username</small>
+                                                <small class="ms-2" style="color: hsl(0, 0%, 47%);">• @GetRelativeTime(post.DateCreated)</small>
                                                 @if (post.UserId == AuthService.CurrentUser?.UserId)
                                                 {
                                                     <button class="btn btn-sm ms-auto"
-                                                            style="background-color: #222222; color: #ff6666; border: 1px solid #333333;"
+                                                            style="background-color: hsl(0, 0%, 13%); color: hsl(0, 60%, 70%); border: 1px solid hsl(0, 0%, 20%);"
                                                             @onclick="@(() => DeletePost(post.PostId))">
                                                         Delete
                                                     </button>
                                                 }
                                             </div>
-                                            <p class="mb-2" style="color: #cccccc;">@((MarkupString)System.Web.HttpUtility.HtmlEncode(post.Content))</p>
+                                            <p class="mb-2" style="color: hsl(0, 0%, 80%);">@((MarkupString)System.Web.HttpUtility.HtmlEncode(post.Content))</p>
                                             <div class="d-flex align-items-center">
                                                 <button class="btn btn-sm me-3"
-                                                        style="@(post.IsLikedByCurrentUser ? "background-color: #331111; color: #ff6666; border: 1px solid #442222;" : "background-color: #222222; color: #aaaaaa; border: 1px solid #333333;")"
+                                                        style="@(post.IsLikedByCurrentUser ? "background-color: hsl(0, 60%, 20%); color: hsl(0, 60%, 70%); border: 1px solid hsl(0, 60%, 30%);" : "background-color: hsl(0, 0%, 13%); color: hsl(0, 0%, 70%); border: 1px solid hsl(0, 0%, 20%);")"
                                                         @onclick="@(() => ToggleLike(post))">
                                                     <i class="@(post.IsLikedByCurrentUser ? "fas" : "far") fa-heart me-1"></i>
                                                     @post.LikeCount
                                                 </button>
                                                 <button class="btn btn-sm me-3"
-                                                        style="background-color: #222222; color: #aaaaaa; border: 1px solid #333333;">
+                                                        style="background-color: hsl(0, 0%, 13%); color: hsl(0, 0%, 70%); border: 1px solid hsl(0, 0%, 20%);">
                                                     <i class="far fa-comment me-1"></i>
                                                     @post.CommentCount
                                                 </button>
@@ -109,8 +111,8 @@
                     else
                     {
                         <div class="text-center py-5">
-                            <h4 style="color: #dddddd;">No posts yet</h4>
-                            <p style="color: #777777;">Be the first to share something!</p>
+                            <h4 style="color: hsl(0, 0%, 87%);">No posts yet</h4>
+                            <p style="color: hsl(0, 0%, 47%);">Be the first to share something!</p>
                         </div>
                     }
                 </div>
@@ -119,7 +121,7 @@
                 {
                     <div class="text-center mt-4">
                         <button class="btn" @onclick="LoadMorePosts" disabled="@isLoadingMore"
-                                style="background-color: #222222; color: #dddddd; border: 1px solid #444444;">
+                                style="background-color: hsl(0, 0%, 13%); color: hsl(0, 0%, 87%); border: 1px solid hsl(0, 0%, 27%);">
                             @if (isLoadingMore)
                             {
                                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -137,11 +139,12 @@
             <!-- Sidebar -->
             <div class="col-md-4">
                 <!-- Profile Card -->
-                <div class="card border-0" style="background-color: #111111;">
-                    <div class="card-header border-0" style="background-color: #000000; color: #ffffff;">
-                        <h5 class="card-title mb-0">Your Profile</h5>
+                <div class="card border-0" style="background-color: hsl(0, 0%, 7%);">
+                    <div class="card-header border-0" style="background-color: hsl(0, 0%, 0%); color: hsl(0, 0%, 100%);">
+                        <h5 class="card-title mb-0"></h5>
+                        <h5 style="color: hsl(0, 0%, 100%);">Your Profile</h5>
                     </div>
-                    <div class="card-body" style="background-color: #1a1a1a;">
+                    <div class="card-body" style="background-color: hsl(0, 0%, 10%);">
                         <div class="d-flex align-items-center mb-3">
                             @if (!string.IsNullOrEmpty(AuthService.CurrentUser?.ProfilePictureUrl))
                             {
@@ -151,34 +154,35 @@
                             else
                             {
                                 <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                                     style="width: 50px; height: 50px; background-color: #333333;">
+                                     style="width: 50px; height: 50px; background-color: hsl(0, 0%, 20%);">
                                     <span class="text-white fw-bold">@AuthService.CurrentUser?.DisplayName?.First()</span>
                                 </div>
                             }
                             <div>
-                                <strong style="color: #dddddd;">@AuthService.CurrentUser?.DisplayName</strong>
+                                <strong style="color: hsl(0, 0%, 87%);">@AuthService.CurrentUser?.DisplayName</strong>
                                 <br>
-                                <small style="color: #777777;">@@@AuthService.CurrentUser?.Username</small>
+                                <small style="color: hsl(0, 0%, 47%);">@@@AuthService.CurrentUser?.Username</small>
                             </div>
                         </div>
                         @if (!string.IsNullOrEmpty(AuthService.CurrentUser?.Bio))
                         {
-                            <p style="color: #777777;">@AuthService.CurrentUser.Bio</p>
+                            <p style="color: hsl(0, 0%, 47%);">@AuthService.CurrentUser.Bio</p>
                         }
                         <a href="/profile" class="btn btn-sm"
-                           style="background-color: #222222; color: #dddddd; border: 1px solid #444444;">
+                           style="background-color: hsl(0, 0%, 13%); color: hsl(0, 0%, 87%); border: 1px solid hsl(0, 0%, 27%);">
                             Edit Profile
                         </a>
                     </div>
                 </div>
 
                 <!-- Trending Card -->
-                <div class="card mt-3 border-0" style="background-color: #111111;">
-                    <div class="card-header border-0" style="background-color: #000000; color: #ffffff;">
-                        <h5 class="card-title mb-0">Trending</h5>
+                <div class="card mt-3 border-0" style="background-color: hsl(0, 0%, 100%);">
+                    <div class="card-header border-0" style="background-color: hsl(0, 0%, 0%); color: hsl(0, 0%, 100%);">
+                        <h5 class="card-title mb-0"></h5>
+                        <h5 style="color: hsl(0, 0%, 100%);">Trending</h5>
                     </div>
-                    <div class="card-body" style="background-color: #1a1a1a;">
-                        <p style="color: #777777;">Coming soon...</p>
+                    <div class="card-body" style="background-color: hsl(0, 0%, 10%);">
+                        <p style="color: hsl(0, 0%, 100%);">Coming soon...</p>
                     </div>
                 </div>
             </div>
@@ -190,15 +194,15 @@ else
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
-                <h1 class="display-4 mb-4" style="color: #dddddd;">Welcome to LieAsocial</h1>
-                <p class="lead mb-4" style="color: #aaaaaa;">Connect with friends and share what's happening in your world.</p>
+                <h1 class="display-4 mb-4" style="color: hsl(0, 0%, 87%);">Welcome to LieAsocial</h1>
+                <p class="lead mb-4" style="color: hsl(0, 0%, 67%);">Connect with friends and share what's happening in your world.</p>
                 <div class="d-flex justify-content-center gap-3">
                     <a href="/login" class="btn btn-lg"
-                       style="background-color: #222222; color: #dddddd; border: 1px solid #444444;">
+                       style="background-color: hsl(0, 0%, 13%); color: hsl(0, 0%, 87%); border: 1px solid hsl(0, 0%, 27%);">
                         Login
                     </a>
                     <a href="/registration" class="btn btn-lg"
-                       style="background-color: #000000; color: #ffffff; border: 1px solid #444444;">
+                       style="background-color: hsl(0, 0%, 0%); color: hsl(0, 0%, 100%); border: 1px solid hsl(0, 0%, 27%);">
                         Sign Up
                     </a>
                 </div>
@@ -208,7 +212,6 @@ else
 }
 
 @code {
-    /* All the existing C# code remains exactly the same */
     private List<Post> posts = new();
     private string newPostContent = string.Empty;
     private bool isPosting = false;
